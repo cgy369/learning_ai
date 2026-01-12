@@ -7,7 +7,7 @@ random.seed(777)  # 재현성(reproducibility)을 위해 랜덤 시드 설정
 learning_rate = 0.001
 batch_size = 100
 training_epochs = 15
-b_classes = 10
+nb_classes = 10
 
 
 # --- 2. MNIST 데이터셋 로드 및 전처리 (Load & Preprocess MNIST Dataset) ---
@@ -35,18 +35,18 @@ model = tf.keras.Sequential()
 # - input_dim=784: 입력은 784개의 픽셀 값입니다.
 # - activation='relu': ReLU(Rectified Linear Unit) 활성화 함수를 사용합니다.
 #   ReLU는 sigmoid보다 기울기 소실 문제에 덜 민감하며, 딥러닝 모델에서 은닉층에 가장 널리 사용됩니다.
-model.add(tf.keras.layers.Dense(input_dim=784, units=256, activation='relu'))
+model.add(tf.keras.layers.Dense(input_dim=784, units=256, activation="relu"))
 
 # 두 번째 은닉층:
 # - units=256: 256개의 뉴런을 가집니다.
 # - activation='relu': ReLU 활성화 함수를 사용합니다.
 #   이전 레이어의 출력(256개)이 이 레이어의 입력이 됩니다.
-model.add(tf.keras.layers.Dense(units=256, activation='relu'))
+model.add(tf.keras.layers.Dense(units=256, activation="relu"))
 
 # 출력층:
 # - units=nb_classes (10): 10개의 클래스(0-9 숫자)에 대한 출력을 가집니다.
 # - activation='softmax': 다중 클래스 분류를 위한 소프트맥스 활성화 함수를 사용하여 확률 분포를 출력합니다.
-model.add(tf.keras.layers.Dense(units=nb_classes, activation='softmax'))
+model.add(tf.keras.layers.Dense(units=nb_classes, activation="softmax"))
 
 # 모델 구조 요약 출력
 model.summary()
@@ -54,9 +54,11 @@ model.summary()
 
 # --- 4. 모델 컴파일 (Model Compilation) ---
 # 손실 함수, 옵티마이저, 평가지표 설정
-model.compile(loss='categorical_crossentropy',
-              optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
-              metrics=['accuracy'])
+model.compile(
+    loss="categorical_crossentropy",
+    optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
+    metrics=["accuracy"],
+)
 
 
 # --- 5. 모델 훈련 (Model Training) ---
@@ -77,13 +79,17 @@ print(f"Test Accuracy: {accuracy:.4f}")
 # --- 7. 무작위 샘플 예측 (Random Sample Prediction) ---
 # 테스트 데이터에서 무작위로 10개의 샘플을 선택하여 모델의 예측 결과를 확인합니다.
 print("\n--- Random 10 Sample Predictions ---")
-y_predicted = model.predict(x_test) # 전체 테스트 데이터에 대한 예측을 한 번에 수행
+y_predicted = model.predict(x_test)  # 전체 테스트 데이터에 대한 예측을 한 번에 수행
 
-for _ in range(10): # 10번 반복
-    random_index = random.randint(0, x_test.shape[0] - 1) # 테스트 데이터 내에서 무작위 인덱스 선택
-    
+for _ in range(10):  # 10번 반복
+    random_index = random.randint(
+        0, x_test.shape[0] - 1
+    )  # 테스트 데이터 내에서 무작위 인덱스 선택
+
     # 실제 레이블과 예측된 레이블을 출력합니다.
     # np.argmax는 원-핫 인코딩된 벡터에서 1의 위치(즉, 클래스 인덱스)를 찾아줍니다.
-    print(f"Index: {random_index}, "
-          f"Actual Y: {np.argmax(y_test[random_index])}, "
-          f"Predicted Y: {np.argmax(y_predicted[random_index])}")
+    print(
+        f"Index: {random_index}, "
+        f"Actual Y: {np.argmax(y_test[random_index])}, "
+        f"Predicted Y: {np.argmax(y_predicted[random_index])}"
+    )
